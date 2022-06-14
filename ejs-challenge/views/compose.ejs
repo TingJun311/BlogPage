@@ -2,9 +2,14 @@
     <%- include("partials/header") -%>
         
         <h1>Compose</h1>
-        <form action="/compose" method="post">
-            <input type="text" name="publishData">
-            <button type="submit" name="submit">Publish</button>
-        </form>
+        <div class="container">
+            <form action="/compose" method="post">
+                <label for="title" class="form-label text-left"><strong>Title</strong></label>
+                <input type="text" id="title" class="form-control" name="publishData">
+                <label for="comments"><strong>Post</strong></label>
+                <textarea class="form-control" name="postComment" id="comments" cols="30" rows="8"></textarea>
+                <button type="submit" class="btn btn-info mt-3" name="submit">Publish</button>
+            </form>
+        </div>
     <%- include("partials/footer") -%>
 </html>
