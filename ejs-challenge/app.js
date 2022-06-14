@@ -12,17 +12,32 @@ const contactContent =
 const app = express();
 
 app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded({ 
-  extended: true 
-}));
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+    })
+);
 app.use(express.static("public"));
 app.listen(3000, function () {
     console.log("Server started on port 3000");
 });
 
 app.get("/", (req, res) => {
-  
-  res.render("home", {
-    content: homeStartingContent + aboutContent + contactContent
-  });
+    res.render("home", {
+        content: homeStartingContent,
+    });
+});
+
+app.get("/about", (req, res) => {
+    console.log(req.body)
+
+    res.render("about", {
+        content: aboutContent
+    })
+});
+
+app.get("/contact", (req, res) => {
+    res.render("contact", {
+        content: contactContent
+    })
 });
