@@ -46,7 +46,10 @@ app.get("/compose", (req, res) => {
     res.render("compose")
 });
 app.post("/compose", (req, res) => {
-    const data = req.body.publishData;
+    const data = {
+        title: req.body.publishData,
+        body: req.body.postComment
+    }
 
     console.log(data);
 });
