@@ -56,3 +56,8 @@ app.post("/compose", (req, res) => {
     res.redirect("/");
     console.log(data);
 });
+
+
+app.get("/posts/:topic", (req, res) => {
+    console.log(req.params.topic);
+});
