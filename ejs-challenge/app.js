@@ -11,6 +11,7 @@ const contactContent =
 
 const app = express(),
     postedData = [];
+var urlParams;
 
 app.set("view engine", "ejs");
 app.use(
@@ -54,10 +55,16 @@ app.post("/compose", (req, res) => {
     };
     postedData.push(data);
     res.redirect("/");
-    console.log(data);
 });
 
 
 app.get("/posts/:topic", (req, res) => {
-    console.log(req.params.topic);
+    urlParams = req.params.topic;
+    postedData.forEach((i) => {
+        if (i.title === urlParams) {
+            console.log("Match Found");
+        } else {
+            console.log("Not found");
+        }
+    });
 });
