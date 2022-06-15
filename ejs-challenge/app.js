@@ -62,10 +62,12 @@ app.post("/compose", (req, res) => {
 app.get("/posts/:topic", (req, res) => {
     urlParams = lodash.lowerCase(req.params.topic);
     postedData.forEach((i) => {
-        if (lodash.lowerCase(i.title) === urlParams) {
-            console.log("Match Found");
-        } else {
-            console.log("Not found");
-        }
+        const currParams = lodash.lowerCase(i.title);
+        if (currParams === urlParams) {
+            res.render("post", {
+                reqPost: currParams,
+                reqContent: i.body
+            })
+        } 
     });
 });
