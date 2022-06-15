@@ -4,5 +4,12 @@
         
         <h1>Home</h1>
         <p><%= content %></p>
+
+        <% for(var i = 0 ; i < postContent.length; i++) { %>
+            <div>
+                <h3><%= postContent[i].title %></h3>
+                <p><%= postContent[i].body %></p>
+            </div>
+        <% } %>
     <%- include("partials/footer") -%>
 </html>

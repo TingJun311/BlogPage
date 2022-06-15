@@ -25,9 +25,8 @@ app.listen(3000, function () {
 app.get("/", (req, res) => {
     res.render("home", {
         content: homeStartingContent,
+        postContent: postedData
     });
-
-    console.log(postedData);
 });
 
 app.get("/about", (req, res) => {
@@ -43,6 +42,7 @@ app.get("/contact", (req, res) => {
         content: contactContent
     })
 });
+
 
 app.get("/compose", (req, res) => {
     res.render("compose")
