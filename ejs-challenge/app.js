@@ -2,6 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const lodash = require("lodash");
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
+const env = require("dotenv").config(); // When using .env file
 
 const homeStartingContent =
     "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.";
@@ -13,7 +16,6 @@ const contactContent =
 const app = express(),
     postedData = [];
 var urlParams;
-
 app.set("view engine", "ejs");
 app.use(
     bodyParser.urlencoded({
@@ -25,15 +27,30 @@ app.listen(3000, function () {
     console.log("Server started on port 3000");
 });
 
+
+// Connection string 
+mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.uvrr1.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`)
+const blogSchema = new Schema({
+    title: String,
+    link: String,
+    content: String,
+});
+const blog = mongoose.model("blogPage", blogSchema);
+
+
+
 app.get("/", (req, res) => {
+    const subStringLength = 100;
+
+    
     res.render("home", {
         content: homeStartingContent,
         postContent: postedData,
+        length: subStringLength
     });
 });
 
 app.get("/about", (req, res) => {
-    console.log(req.body);
 
     res.render("about", {
         content: aboutContent,
@@ -47,15 +64,32 @@ app.get("/contact", (req, res) => {
 });
 
 app.get("/compose", (req, res) => {
-    res.render("compose");
+    res.render("compose"); // Render the compose ejs
 });
 app.post("/compose", (req, res) => {
-    const data = {
-        title: req.body.publishData,
-        body: req.body.postComment,
-    };
-    postedData.push(data);
-    res.redirect("/");
+    const title = req.body.publishData,
+        link = req.body.url,
+        content = req.body.postComment;
+
+    if (!title || !link || !content) {
+        res.redirect("/Compose")
+    } else {
+        const post = new blog({
+            title: title,
+            link: link,
+            content: content,
+        })
+        blog.findOne({link: link}, (err, result) => {
+            if (!err) {
+                if (result === null) {
+                    post.save();
+                    res.redirect("/");
+                } else {
+                    res.redirect("/compose");
+                }
+            } 
+        });
+    }
 });
 
 
@@ -65,7 +99,7 @@ app.get("/posts/:topic", (req, res) => {
         const currParams = lodash.lowerCase(i.title);
         if (currParams === urlParams) {
             res.render("post", {
-                reqPost: currParams,
+                reqPost: i.title,
                 reqContent: i.body
             })
         } 
